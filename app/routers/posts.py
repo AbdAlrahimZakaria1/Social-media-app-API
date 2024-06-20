@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from .. import models, schemas, oauth2
 from ..database import get_db
 from fastapi import status, Response, HTTPException, Depends, APIRouter
@@ -9,9 +9,9 @@ router = APIRouter(prefix="/api/v1/posts", tags=["Posts"])
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
 async def create_posts(
-    post: schemas.CreatePost,
+    post: schemas.PostCreate,
     db: Session = Depends(get_db),
-    current_user: schemas.TokenData = Depends(oauth2.get_current_user),
+    current_user: schemas.UserOut = Depends(oauth2.get_current_user),
 ):
     # Here's how to do it using psycopg2
     # cursor.execute(
@@ -22,7 +22,7 @@ async def create_posts(
     # connection.commit()
 
     # Get the pydantic model
-    new_post = models.Post(**post.model_dump())
+    new_post = models.Post(owner_id=current_user.id, **post.model_dump())
     # Add to DB
     db.add(new_post)
     # Save changes to DB
@@ -35,9 +35,18 @@ async def create_posts(
 @router.get("/", response_model=List[schemas.Post])
 async def get_posts(
     db: Session = Depends(get_db),
-    current_user: schemas.TokenData = Depends(oauth2.get_current_user),
+    current_user: schemas.UserOut = Depends(oauth2.get_current_user),
+    limit: int = 10,
+    skip: int = 0,
+    search: Optional[str] = "",
 ):
-    posts = db.query(models.Post).all()
+    posts = (
+        db.query(models.Post)
+        .filter(models.Post.title.contains(search))
+        .limit(limit)
+        .offset(skip)
+        .all()
+    )
     return posts
 
 
@@ -45,7 +54,7 @@ async def get_posts(
 async def get_post(
     id: int,
     db: Session = Depends(get_db),
-    current_user: schemas.TokenData = Depends(oauth2.get_current_user),
+    current_user: schemas.UserOut = Depends(oauth2.get_current_user),
 ):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     if not post:
@@ -58,13 +67,20 @@ async def get_post(
 @router.put("/{id}", response_model=schemas.Post)
 async def update_post(
     id: int,
-    post: schemas.UpdatePost,
+    post: schemas.PostUpdate,
     db: Session = Depends(get_db),
-    current_user: schemas.TokenData = Depends(oauth2.get_current_user),
+    current_user: schemas.UserOut = Depends(oauth2.get_current_user),
 ):
     post_query = db.query(models.Post).filter(models.Post.id == id)
+    post = post_query.first()
 
-    if post_query.first() == None:
+    if post.owner_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You are not authorized to perform requested action.",
+        )
+
+    if post == None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Invalid post id."
         )
@@ -79,15 +95,23 @@ async def update_post(
 async def delete_post(
     id: int,
     db: Session = Depends(get_db),
-    current_user: schemas.TokenData = Depends(oauth2.get_current_user),
+    current_user: schemas.UserOut = Depends(oauth2.get_current_user),
 ):
-    post = db.query(models.Post).filter(models.Post.id == id)
-    if post.first() == None:
+    post_query = db.query(models.Post).filter(models.Post.id == id)
+    post = post_query.first()
+
+    if post.owner_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You are not authorized to perform requested action.",
+        )
+
+    if post == None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Invalid post id."
         )
 
-    post.delete(synchronize_session=False)
+    post_query.delete(synchronize_session=False)
     db.commit()
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)

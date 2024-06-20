@@ -4,40 +4,33 @@ from pydantic.networks import EmailStr
 from typing import Optional
 
 
-class BasePost(BaseModel):
+class PostBase(BaseModel):
     title: str
     content: str
     published: bool = True
 
 
-class CreatePost(BasePost):
+class PostCreate(PostBase):
     pass
 
 
-class UpdatePost(BasePost):
+class PostUpdate(PostBase):
     pass
 
 
-class Post(BasePost):
-    id: int
-    created_at: datetime
-
-
-class IgnoredType:
-    pass
-
-
-class CreateUser(BaseModel):
-    email: EmailStr
-    password: str
-
-
-class User(BaseModel):
+class UserOut(BaseModel):
     id: int
     email: str
 
 
-class UserLogin(BaseModel):
+class Post(PostBase):
+    id: int
+    owner_id: int
+    created_at: datetime
+    owner: UserOut
+
+
+class UserCreate(BaseModel):
     email: EmailStr
     password: str
 
@@ -48,4 +41,4 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    id: Optional[str] = None
+    id: int
