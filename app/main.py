@@ -4,7 +4,8 @@ from . import models
 from .database import engine
 from .routers import users, posts, authentication, votes
 
-models.Base.metadata.create_all(bind=engine)
+# This is not needed anymore since the DB migrations are done by Alembic
+# models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 app.include_router(posts.router)
