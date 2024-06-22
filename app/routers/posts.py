@@ -3,6 +3,8 @@ from .. import models, schemas, oauth2
 from ..database import get_db
 from fastapi import status, Response, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
+from sqlalchemy import func
+import json
 
 router = APIRouter(prefix="/api/v1/posts", tags=["Posts"])
 
@@ -32,7 +34,10 @@ async def create_posts(
     return new_post
 
 
-@router.get("/", response_model=List[schemas.Post])
+@router.get("/", response_model=List[schemas.postOut])
+# @router.get(
+#     "/",
+# )
 async def get_posts(
     db: Session = Depends(get_db),
     current_user: schemas.UserOut = Depends(oauth2.get_current_user),
@@ -41,26 +46,39 @@ async def get_posts(
     search: Optional[str] = "",
 ):
     posts = (
-        db.query(models.Post)
+        db.query(models.Post, func.count(models.Vote.post_id).label("Votes"))
+        .join(models.Vote, models.Post.id == models.Vote.post_id, isouter=True)
+        .group_by(models.Post.id)
         .filter(models.Post.title.contains(search))
         .limit(limit)
         .offset(skip)
         .all()
     )
+    posts = [{"Post": post[0], "votes": post[1]} for post in posts]
     return posts
 
 
-@router.get("/{id}", response_model=schemas.Post)
+@router.get("/{id}", response_model=schemas.postOut)
 async def get_post(
     id: int,
     db: Session = Depends(get_db),
     current_user: schemas.UserOut = Depends(oauth2.get_current_user),
 ):
-    post = db.query(models.Post).filter(models.Post.id == id).first()
+    post = (
+        db.query(models.Post, func.count(models.Vote.post_id).label("Votes"))
+        .join(models.Vote, models.Post.id == models.Vote.post_id, isouter=True)
+        .filter(models.Post.id == id)
+        .group_by(models.Post.id)
+        .first()
+    )
+
+    # post = db.query(models.Post).filter(models.Post.id == id).first()
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Invalid document id!"
         )
+    post = {"Post": post[0], "votes": post[1]}
+    print(post)
     return post
 
 

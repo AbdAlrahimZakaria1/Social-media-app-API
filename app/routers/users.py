@@ -3,6 +3,7 @@ from .. import models, schemas, utils, oauth2
 from ..database import get_db
 from fastapi import status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
+import json
 
 router = APIRouter(prefix="/api/v1/users", tags=["Users"])
 
@@ -46,7 +47,6 @@ async def get_users(
     users = (
         db.query(models.User).filter(models.Post.owner_id == current_user.id).first()
     )
-
     return users
 
 

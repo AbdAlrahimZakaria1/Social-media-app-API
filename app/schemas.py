@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
 from pydantic.networks import EmailStr
-from typing import Optional
 
 
 class PostBase(BaseModel):
@@ -29,6 +28,17 @@ class Post(PostBase):
     created_at: datetime
     owner: UserOut
 
+    # class Config:
+    #     orm_mode = True
+
+
+class postOut(BaseModel):
+    Post: Post
+    votes: int
+
+    # class Config:
+    #     orm_mode = True
+
 
 class UserCreate(BaseModel):
     email: EmailStr
@@ -42,3 +52,8 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: int
+
+
+class Vote(BaseModel):
+    post_id: int
+    vote_dir: int
