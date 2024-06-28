@@ -22,5 +22,6 @@ https://fastapi-9jxc.onrender.com/docs
 - Database Migration: SQL Alembic 
 
 # Notes:
-The app is deployed on a free cloud provider, so whn accessing the above url, please wait up to 1 minute for it to load the first time.
+The app is deployed on a free cloud provider, so when accessing the above url, please wait up to 1 minute for it to load the first time.
+
 Please make sure that you're logged-ing/authorized before using the requests that have "Lock" next to them.
