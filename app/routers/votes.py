@@ -43,7 +43,7 @@ async def create_vote(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Vote does not exist!",
             )
-        # TODO doesnt delete
+
         post_query.delete(synchronize_session=False)
         db.commit()
         return Response(status_code=status.HTTP_204_NO_CONTENT)

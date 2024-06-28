@@ -50,7 +50,7 @@ def client(session):
 
 
 @pytest.fixture
-def test_login_data(client):
+def test_user(client):
     user_data = {"email": "test_login@example.com", "password": "password123"}
     res = client.post("/api/v1/users", json=user_data)
 
@@ -60,11 +60,37 @@ def test_login_data(client):
 
 
 @pytest.fixture
-def token(test_login_data):
-    return create_access_token({"user_id": test_login_data["id"]})
+def test_user2(client):
+    user_data = {"email": "test_login2@example.com", "password": "password12345"}
+    res = client.post("/api/v1/users", json=user_data)
+
+    new_user = res.json()
+    new_user["password"] = user_data["password"]
+    return new_user
+
+
+@pytest.fixture
+def token(test_user):
+    return create_access_token({"user_id": test_user["id"]})
 
 
 @pytest.fixture
 def authorized_client(client, token):
     client.headers = {**client.headers, "Authorization": f"Bearer {token}"}
     return client
+
+
+@pytest.fixture
+def test_posts(session, test_user, test_user2):
+    posts = [
+        {"title": "1st title", "content": "1st content", "owner_id": test_user["id"]},
+        {"title": "2st title", "content": "2st content", "owner_id": test_user["id"]},
+        {"title": "3st title", "content": "3st content", "owner_id": test_user2["id"]},
+    ]
+
+    posts_model_list = [models.Post(**post) for post in posts]
+    session.add_all(posts_model_list)
+    session.commit()
+
+    posts = session.query(models.Post).all()
+    return posts

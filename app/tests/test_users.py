@@ -22,12 +22,12 @@ def test_create_user(client):
     assert res.status_code == 201
 
 
-def test_login(client, test_login_data):
+def test_login(client, test_user):
     res = client.post(
         "/api/v1/login",
         data={
-            "username": test_login_data["email"],
-            "password": test_login_data["password"],
+            "username": test_user["email"],
+            "password": test_user["password"],
         },
     )
 
@@ -38,7 +38,7 @@ def test_login(client, test_login_data):
         algorithms=[settings.algorithm],
     )
     user_id = payload.get("user_id")
-    assert user_id == test_login_data["id"]
+    assert user_id == test_user["id"]
     assert res.status_code == 200
     assert token_data.token_type == "bearer"
 

@@ -90,17 +90,17 @@ async def update_post(
     current_user: schemas.UserOut = Depends(oauth2.get_current_user),
 ):
     post_query = db.query(models.Post).filter(models.Post.id == id)
-    post = post_query.first()
+    found_post = post_query.first()
 
-    if post.owner_id != current_user.id:
+    if found_post == None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Invalid post id."
+        )
+
+    if found_post.owner_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You are not authorized to perform requested action.",
-        )
-
-    if post == None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Invalid post id."
         )
 
     post_query.update(post.model_dump())
@@ -118,15 +118,15 @@ async def delete_post(
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post = post_query.first()
 
+    if post == None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Invalid post id."
+        )
+
     if post.owner_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You are not authorized to perform requested action.",
-        )
-
-    if post == None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Invalid post id."
         )
 
     post_query.delete(synchronize_session=False)
