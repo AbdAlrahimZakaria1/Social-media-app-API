@@ -1,6 +1,6 @@
-# Social media app
+# Social media app API
 
-This is a simple social media app, Users can create/update/delete posts & vote on them.
+This is a simple social media app API, Users can create/update/delete posts & vote on them.
 
 This app is deployed on:
 1. Ubuntu server (Subscription is cancelled now).
