@@ -4,8 +4,9 @@ This is a simple social media app API, Users can create/update/delete posts & vo
 
 This app is deployed on:
 1. Ubuntu server (Subscription is cancelled now).
-2. Render free cloud hosting service: https://fastapi-9jxc.onrender.com/  (Please wait up to a minute for the website to start).
+2. Render free cloud hosting service: https://fastapi-9jxc.onrender.com/.
 See the API docs here: https://fastapi-9jxc.onrender.com/docs
+(Please wait up to a minute for the website to start).
 
 - The **API** logic and the PostgreSQL are seperately containerized using Docker, visible here: https://hub.docker.com/r/lypophrenia/fastapi
 - **Docker compose** files are configured for both **DEV** & **PROD** to quickly instantiate a docker image.
@@ -16,14 +17,14 @@ See the API docs here: https://fastapi-9jxc.onrender.com/docs
 # CI/CD:
 A **CI/CD** pipeline is created using Github Actions to automatically do the following tasks upon pushing any commit to github:
 
-A. **Build the image:**
+A. **Build:**
   1. Set up python & update pip on VM.
   2. install requirements/dependencies.
   3. Create a testing PostgreSQL DB for pytest tests.
   4. Run pytest tests (~30 tests).
   5. Create a new Docker Image and upload it to Docker Hub. (https://hub.docker.com/r/lypophrenia/fastapi)
 
-B. **Deployment:**
+B. **Deploy:**
   1. Deploy on an Ubuntu Server
   2. Deploy on "Render" cloud hosting provider
 
