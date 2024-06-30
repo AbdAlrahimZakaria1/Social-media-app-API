@@ -71,7 +71,7 @@ jobs:
     - name: Deploying on Ubuntu server
       run: echo "Deploying on Ubuntu server"
     - name: Executing remote ssh commands using password
-      run: appleboy/ssh-action@v1.0.3
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.PROD_HOST }}
         username: ${{ secrets.PROD_USERNAME }}
