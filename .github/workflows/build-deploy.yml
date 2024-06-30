@@ -74,12 +74,12 @@ jobs:
     - name: Executing remote ssh commands using password
       uses: appleboy/ssh-action@v1.0.3
       with:
-        host: ${{ secrets.PROD_HOST }}
-        username: ${{ secrets.PROD_USERNAME }}
-        password: ${{ secrets.PROD_PASSWORD }}
+        host: ${{secrets.PROD_HOST}}
+        username: ${{secrets.PROD_USERNAME}}
+        password: ${{secrets.PROD_PASSWORD}}
         script: |
           cd fastapi-app/src
           git pull
-          sudo systemctl restart api
+          echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl restart api
 
 
