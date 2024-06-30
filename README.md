@@ -15,13 +15,21 @@ See the API docs here: https://fastapi-9jxc.onrender.com/docs
 # CI/CD:
 A CI/CD pipeline is created using Github Actions to automatically do the following tasks upon pushing any commit to github:
 1- Build the image:
+
   1- Set up python & update pip on VM.
+
   2- install requirements/dependencies.
+
   3- Create a testing PostgreSQL DB for pytest tests.
+
   4- Run pytest tests (~30 tests).
+
   5- Create a new Docker Image and upload it to Docker Hub.
+
 2- Deployment:
+
   1- Deploy on an Ubuntu Server
+
   2- Deploy on "Render" cloud hosting provider
 
 
