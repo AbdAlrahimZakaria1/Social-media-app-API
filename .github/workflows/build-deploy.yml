@@ -7,29 +7,21 @@ jobs:
     environment:
       name: github-actions-testing
     env:
-      # DATABASE_HOSTNAME: ${{secrets.DATABASE_HOSTNAME}}
-      # DATABASE_PORT: ${{secrets.DATABASE_PORT}}
-      # DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
-      # DATABASE_NAME: ${{secrets.DATABASE_NAME}}
-      # DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}}
-      # JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
-      # ALGORITHM: ${{secrets.ALGORITHM}}
-      # ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
-      DATABASE_HOSTNAME: localhost
-      DATABASE_PORT: 5432
-      DATABASE_PASSWORD: 70336165
-      DATABASE_NAME: fastapi
-      DATABASE_USERNAME: postgres
-      JWT_SECRET_KEY: 5f7bd31f7393b691ef07b535d9fd5d1d2e11573966f8820c01c9bc67c27c34c9
-      ALGORITHM: HS256
-      ACCESS_TOKEN_EXPIRE_MINUTES: 60
+      DATABASE_HOSTNAME: ${{secrets.DATABASE_HOSTNAME}}
+      DATABASE_PORT: ${{secrets.DATABASE_PORT}}
+      DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+      DATABASE_NAME: ${{secrets.DATABASE_NAME}}
+      DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}}
+      JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+      ALGORITHM: ${{secrets.ALGORITHM}}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
 
     services:
       postgres:
         image: postgres
         env:
-          POSTGRES_PASSWORD: 70336165
-          POSTGRES_DB: fastapi_test
+          POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          POSTGRES_DB: ${{secrets.DATABASE_NAME}}_test
         ports:
         - 5432:5432
         options: >-
