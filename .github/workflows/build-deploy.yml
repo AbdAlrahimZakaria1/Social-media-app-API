@@ -57,6 +57,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{vars.DOCKER_USERNAME}}/fastapi:latest
+          tags: ${{secrets.DOCKER_USERNAME}}/fastapi:latest
       - name: Image digest
         run: echo ${{steps.docker_build.outputs.digest}}
