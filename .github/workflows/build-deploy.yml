@@ -66,7 +66,7 @@ jobs:
   deploy:
     needs: [build]
     environment: 
-      name: production
+      name: github-actions-production
     runs-on: ubuntu-latest
     steps:
     - name: Deploying on Ubuntu server
