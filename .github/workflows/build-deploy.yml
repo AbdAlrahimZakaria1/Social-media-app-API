@@ -77,8 +77,8 @@ jobs:
         username: ${{ secrets.PROD_USERNAME }}
         password: ${{ secrets.PROD_PASSWORD }}
         script: |
-        cd fastapi-app/src
-        git pull
-        sudo systemctl restart api
+          cd fastapi-app/src
+          git pull
+          sudo systemctl restart api
 
 
