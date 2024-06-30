@@ -49,5 +49,8 @@ B. **Deploy:**
 - Containerization: Docker
 - Hosting: Ubuntu server
 - Testing: Pytest
-  
+
+# Postman documenation
+Available here: https://documenter.getpostman.com/view/30983004/2sA3duHDnQ
+
 Please make sure that you're logged-ing/authorized before using the requests that have "Lock" next to them.
