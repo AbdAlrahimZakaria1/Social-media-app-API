@@ -85,8 +85,8 @@ jobs:
     - name: Deploying on Onrender service
       run: echo "Deploying on Onrender service"
     - name: Deploy to production
-        uses: johnbeynon/render-deploy-action@v0.0.8
-        with:
-          service-id: ${{ secrets.ONRENDER_SERVICE_ID }}
-          api-key: ${{ secrets.ONRENDER_API_KEY }}
-          wait-for-success: true
+      uses: johnbeynon/render-deploy-action@v0.0.8
+      with:
+        service-id: ${{ secrets.ONRENDER_SERVICE_ID }}
+        api-key: ${{ secrets.ONRENDER_API_KEY }}
+        wait-for-success: true
