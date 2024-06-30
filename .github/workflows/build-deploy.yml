@@ -71,7 +71,7 @@ jobs:
     steps:
     - name: Deploying on Ubuntu server
       run: echo "Deploying on Ubuntu server"
-    - name: Executing remote ssh commands using password
+    - name: Deploying on ubuntu server via SSH remote using password
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{secrets.PROD_HOST}}
@@ -82,4 +82,11 @@ jobs:
           git pull
           echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl restart api
 
-
+    - name: Deploying on Onrender service
+      run: echo "Deploying on Onrender service"
+    - name: Deploy to production
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.ONRENDER_SERVICE_ID }}
+          api-key: ${{ secrets.ONRENDER_API_KEY }}
+          wait-for-success: true
