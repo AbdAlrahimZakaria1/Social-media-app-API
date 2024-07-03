@@ -57,3 +57,8 @@ class TokenData(BaseModel):
 class Vote(BaseModel):
     post_id: int
     vote_dir: int
+
+
+class test(BaseModel):
+    post_id: int
+    vote_dir: int
