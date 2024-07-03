@@ -23,7 +23,7 @@ app.add_middleware(
 
 @app.get("/")
 async def main():
-    return {"message": "Hello World to the Onrender services!"}
+    return {"message": "Hello World!"}
 
 
 app.include_router(posts.router)

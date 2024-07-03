@@ -47,21 +47,21 @@ jobs:
           pip install pytest
           pytest -v -s
 
-      # This part works but since we don't use Docker to host PRODUCTION_ENV we'll keep it off for faster performance.
-      # - name: Login to Docker Hub
-      #   uses: docker/login-action@v3
-      #   with:
-      #     username: ${{secrets.DOCKER_USERNAME}}
-      #     password: ${{secrets.DOCKERHUB_TOKEN}}
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v3
-      # - name: Build and push
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     push: true
-      #     tags: ${{secrets.DOCKER_USERNAME}}/fastapi:latest
-      # - name: Image digest
-      #   run: echo ${{steps.docker_build.outputs.digest}}
+      This part works but since we don't use Docker to host PRODUCTION_ENV we'll keep it off for faster performance.
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ${{secrets.DOCKER_USERNAME}}/fastapi:latest
+      - name: Image digest
+        run: echo ${{steps.docker_build.outputs.digest}}
 
   deploy:
     needs: [build]
@@ -69,18 +69,19 @@ jobs:
       name: github-actions-production
     runs-on: ubuntu-latest
     steps:
-    - name: Deploying on Ubuntu server
-      run: echo "Deploying on Ubuntu server"
-    - name: Deploying on ubuntu server via SSH remote using password
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{secrets.PROD_HOST}}
-        username: ${{secrets.PROD_USERNAME}}
-        password: ${{secrets.PROD_PASSWORD}}
-        script: |
-          cd fastapi-app/src
-          git pull
-          echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl restart api
+    # Ubuntu server is cancelled for now
+    # - name: Deploying on Ubuntu server
+    #   run: echo "Deploying on Ubuntu server"
+    # - name: Deploying on ubuntu server via SSH remote using password
+    #   uses: appleboy/ssh-action@v1.0.3
+    #   with:
+    #     host: ${{secrets.PROD_HOST}}
+    #     username: ${{secrets.PROD_USERNAME}}
+    #     password: ${{secrets.PROD_PASSWORD}}
+    #     script: |
+    #       cd fastapi-app/src
+    #       git pull
+    #       echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl restart api
 
     - name: Deploying on Onrender service
       run: echo "Deploying on Onrender service"
